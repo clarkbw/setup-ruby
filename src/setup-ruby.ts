@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import {findRubyVersion} from './installer';
-import { configAuthentication } from './auth';
+import {configAuthentication} from './auth';
 
 async function run() {
   try {
@@ -16,7 +16,6 @@ async function run() {
     const password = core.getInput('password', {required: false});
 
     await configAuthentication(registry, username, password);
-
   } catch (error) {
     core.setFailed(error.message);
   }
