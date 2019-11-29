@@ -19,7 +19,7 @@ export function generate(key: string, password: string) {
 }
 
 async function write(directory: string, credentials: string) {
-  const options = {encoding: 'utf-8'};
+  const options = {encoding: 'utf-8', mode: 0o600};
   const location = path.join(directory, CREDENTIALS_FILE);
   console.log(`writing ${location}`);
   return fs.writeFile(location, credentials, options);
