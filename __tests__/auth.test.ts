@@ -38,12 +38,12 @@ describe('auth', () => {
     await auth.configAuthentication({key, password});
 
     function octalMode(stats: fs.Stats) {
-      return (stats.mode & parseInt('777', 8));
+      return stats.mode & parseInt('777', 8);
     }
 
     expect(fs.existsSync(GEM_DIR)).toBe(true);
     expect(fs.existsSync(CREDENTIALS_FILE)).toBe(true);
-    expect(octalMode(fs.statSync(CREDENTIALS_FILE))).toEqual(0o600)
+    expect(octalMode(fs.statSync(CREDENTIALS_FILE))).toEqual(0o600);
     expect(fs.readFileSync(CREDENTIALS_FILE, 'utf-8')).toEqual(
       gem.generate(key, password)
     );
