@@ -14,12 +14,12 @@ interface GemBundlerParameters {
 // Supplying a registry host, username and password supports both bundler and gem
 // Not suppying a host name doesn't allow for bundler support
 export async function configAuthentication(config: GemBundlerParameters) {
-  if (config.host && config.username) {
+  if (config.host && config.username && config.password) {
     console.log(
       `configuring bundler for ${config.host} = ${config.username}: a password`
     );
     await bundler(config.host, config.username, config.password);
-  } else if (config.key) {
+  } else if (config.key && config.password) {
     console.log(`configuring gem for ${config.key} and a password`);
     await gem(config.key, config.password);
   } else {
