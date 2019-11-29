@@ -19,12 +19,16 @@ export async function configAuthentication(config: GemBundlerParameters) {
       `configuring bundler for ${config.host} = ${config.username}: a password`
     );
     await bundler(config.host, config.username, config.password);
-  } else if (config.key && config.password) {
+  } else {
+    core.debug(
+      `bundler cannot configured without the host, username, and password`
+    );
+  }
+
+  if (config.key && config.password) {
     console.log(`configuring gem for ${config.key} and a password`);
     await gem(config.key, config.password);
   } else {
-    core.debug(
-      `neither bundler nor gem configured without ${config.host} nor ${config.key}`
-    );
+    core.debug(`gem cannot be configured without the key and password`);
   }
 }
