@@ -10,12 +10,20 @@ async function run() {
     }
     await findRubyVersion(version);
 
-    const registry = core.getInput('registry-url', {required: false});
-    const key = core.getInput('key', {required: false});
-    const username = core.getInput('username', {required: false});
-    const password = core.getInput('password', {required: false});
+    const gem = core.getInput('gem', {required: false});
+    if (gem) {
+      const key = core.getInput('key', {required: true});
+      const password = core.getInput('password', {required: true});
+      await configAuthentication({key, password});
+    }
 
-    await configAuthentication(registry, username, password);
+    const bundler = core.getInput('bundler', {required: false});
+    if (bundler) {
+      const host = core.getInput('registry-url', {required: true});
+      const username = core.getInput('username', {required: true});
+      const password = core.getInput('password', {required: true});
+      await configAuthentication({host, username, password});
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
