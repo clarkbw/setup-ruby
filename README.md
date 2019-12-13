@@ -66,8 +66,20 @@ steps:
     registry-url: https://rubygems.pkg.github.com/<username/org>
     username: $${{ github.actor }}
     password: ${{ github.token }} 
-- name: Install
+# Using cache to speed up install https://github.com/actions/cache/blob/master/examples.md#ruby---gem
+- name: Cache gems
+  uses: actions/cache@v1
+  with:
+    path: vendor/bundle
+    key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+    restore-keys: |
+      ${{ runner.os }}-gem-
+- name: Bundler install
   run: |
+    gem update
+    gem install bundler
+    bundle update --bundler
+    bundle config path vendor/bundle
     bundle install --retry=3 --jobs=4
 - name: Build
   run: bundle exec rake build

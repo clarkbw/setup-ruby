@@ -17,6 +17,5 @@ export default async function(
   const env = generateBundlerEnv(host);
   console.log(`exporting bundler env ${env}`);
   core.exportVariable(env, `${username}:${password}`);
-  // core.exportVariable('BUNDLE_GEM__PUSH_KEY', password);
   core.exportVariable('RUBYGEMS_HOST', host);
 }
