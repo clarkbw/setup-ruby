@@ -8,6 +8,7 @@ export function generateBundlerEnv(host: string) {
 }
 
 export default async function(
+  key: string,
   host: string,
   username: string,
   password: string
@@ -15,9 +16,10 @@ export default async function(
   // env['BUNDLE_RUBYGEMS__PKG__GITHUB__COM'] = USERNAME:PASSWORD
   const env = generateBundlerEnv(host);
   console.log(`exporting bundler env ${env}`);
-  core.exportVariable(
-    env,
-    `${encodeURIComponent(username)}:${encodeURIComponent(password)}`
-  );
+  // core.exportVariable(
+  //   env,
+  //   `${encodeURIComponent(username)}:${encodeURIComponent(password)}`
+  // );
+  core.exportVariable('BUNDLE_GEM__PUSH_KEY', key);
   core.exportVariable('RUBYGEMS_HOST', host);
 }
