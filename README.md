@@ -13,7 +13,7 @@ This action sets up a ruby environment for use in actions by:
 
 See [action.yml](action.yml)
 
-Basic:
+## Basic
 ```yaml
 steps:
 - uses: actions/checkout@master
@@ -23,7 +23,7 @@ steps:
 - run: ruby hello.rb
 ```
 
-Matrix Testing:
+## Matrix Testing
 ```yaml
 jobs:
   build:
@@ -40,6 +40,39 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           architecture: 'x64'
       - run: ruby hello.rb
+```
+
+## Publish with gem
+```yaml
+steps:
+- uses: actions/checkout@master
+- uses: actions/setup-ruby@v1
+  with:
+    gem-key: github
+    password: ${{ github.token }} 
+- name: Build Ruby Gem
+  run: gem build *.gemspec
+- name: Publish to GitHub Packages
+  run: |
+    gem push --KEY github --host https://rubygems.pkg.github.com/<username/org> *.gem
+```
+
+## Publish with bundler
+```yaml
+steps:
+- uses: actions/checkout@master
+- uses: actions/setup-ruby@v1
+  with:
+    registry-url: https://rubygems.pkg.github.com/<username/org>
+    username: $${{ github.actor }}
+    password: ${{ github.token }} 
+- name: Install
+  run: |
+    bundle install --retry=3 --jobs=4
+- name: Build
+  run: bundle exec rake build
+- name: Publish to GitHub Packages
+  run: bundle exec rake release:rubygem_push
 ```
 
 # License
