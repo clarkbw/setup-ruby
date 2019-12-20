@@ -33,7 +33,6 @@ describe('auth', () => {
 
   it(`it creates a ${gem.CREDENTIALS_FILE} file given gem parameters`, async () => {
     const key = 'github';
-    const username = 'bluebottle';
     const password = 'SingleOrigin';
 
     await auth.configAuthentication({key, password});
@@ -50,7 +49,7 @@ describe('auth', () => {
     );
   }, 100000);
 
-  it(`it exports an ENV given bundler parameters`, () => {
+  it(`it exports environment variables for bundler`, () => {
     const host = 'https://rubygems.pkg.github.com/mona';
     const username = 'bluebottle';
     const password = 'SingleOrigin';
@@ -90,6 +89,22 @@ describe('auth', () => {
       for (let [key, value] of Object.entries(envs)) {
         expect(bundler.generateBundlerEnv(key)).toBe(value);
       }
+    });
+  });
+
+  describe('cleanup', () => {
+    it(`deletes the auth directory `, async () => {
+      const key = 'github';
+      const password = 'SingleOrigin';
+  
+      await auth.configAuthentication({key, password});
+  
+      expect(fs.existsSync(GEM_DIR)).toBe(true);
+      expect(fs.existsSync(CREDENTIALS_FILE)).toBe(true);
+
+      await cleanup.run();
+
+      expect(fs.existsSync(GEM_DIR)).toBe(false);
     });
   });
 });

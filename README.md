@@ -57,12 +57,13 @@ steps:
     gem push --KEY github --host https://rubygems.pkg.github.com/<username/org> *.gem
 ```
 
-## Publish with bundler
+## Run tests with bundler
 ```yaml
 steps:
 - uses: actions/checkout@master
 - uses: actions/setup-ruby@v1
   with:
+    gem-key: github
     registry-url: https://rubygems.pkg.github.com/<username/org>
     username: $${{ github.actor }}
     password: ${{ github.token }} 
@@ -76,15 +77,10 @@ steps:
       ${{ runner.os }}-gem-
 - name: Bundler install
   run: |
-    gem update
-    gem install bundler
-    bundle update --bundler
     bundle config path vendor/bundle
     bundle install --retry=3 --jobs=4
 - name: Build
-  run: bundle exec rake build
-- name: Publish to GitHub Packages
-  run: bundle exec rake release:rubygem_push
+  run: bundle exec rake test
 ```
 
 # License
