@@ -15,6 +15,7 @@ async function run() {
     const username = core.getInput('username', {required: true});
     const password = core.getInput('password', {required: true});
     if ((password && username && host) || (key && password)) {
+      core.setSecret(password);
       await configAuthentication({key, host, username, password});
     }
   } catch (error) {

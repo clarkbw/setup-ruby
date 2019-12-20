@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "setup ruby action",
-  "main": "lib/setup-ruby.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "ncc build && ncc build src/cleanup.ts -o dist/cleanup",
     "format": "prettier --write **/*.ts */**/*.ts",
     "format-check": "prettier --check **/*.ts */**/*.ts",
     "test": "jest"
@@ -22,7 +22,7 @@
   "author": "GitHub",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.0.0",
+    "@actions/core": "^1.2.0",
     "@actions/tool-cache": "^1.0.0",
     "semver": "^6.1.1"
   },
@@ -31,6 +31,7 @@
     "@types/jest": "^24.0.13",
     "@types/node": "^12.0.4",
     "@types/semver": "^6.0.0",
+    "@zeit/ncc": "^0.20.5",
     "husky": "^2.3.0",
     "jest": "^24.8.0",
     "jest-circus": "^24.7.1",

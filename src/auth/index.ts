@@ -1,4 +1,3 @@
-import * as core from '@actions/core';
 import bundler from './bundler';
 import gem from './gem';
 
@@ -16,19 +15,19 @@ interface GemBundlerParameters {
 export async function configAuthentication(config: GemBundlerParameters) {
   if (config.key && config.host && config.username && config.password) {
     console.log(
-      `configuring bundler for ${config.host} = ${config.username}: a password`
+      `configuring bundler for ${config.host} = ${config.username}:${config.password}`
     );
     await bundler(config.key, config.host, config.username, config.password);
   } else {
-    core.debug(
-      `bundler cannot configured without the host, username, and password`
+    console.log(
+      `bundler configuration requires: key, host, username, and password`
     );
   }
 
   if (config.key && config.password) {
-    console.log(`configuring gem for ${config.key} and a password`);
+    console.log(`configuring gem with key: ${config.key}`);
     await gem(config.key, config.password);
   } else {
-    core.debug(`gem cannot be configured without the key and password`);
+    console.log(`gem push authentication requires: key and password`);
   }
 }

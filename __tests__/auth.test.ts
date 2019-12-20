@@ -13,6 +13,7 @@ jest.doMock('os', () => {
 import * as auth from '../src/auth';
 import * as gem from '../src/auth/gem';
 import * as bundler from '../src/auth/bundler';
+import * as cleanup from '../src/cleanup';
 
 const GEM_DIR = path.join(__dirname, gem.GEM_DIR);
 const CREDENTIALS_FILE = path.join(GEM_DIR, gem.CREDENTIALS_FILE);
@@ -53,12 +54,16 @@ describe('auth', () => {
     const host = 'https://rubygems.pkg.github.com/mona';
     const username = 'bluebottle';
     const password = 'SingleOrigin';
+    const key = 'github';
+    const authenticatedHost = `https://${username}:${password}@rubygems.pkg.github.com/mona`;
 
-    auth.configAuthentication({host, username, password});
+    auth.configAuthentication({key, host, username, password});
 
     expect(process.env[bundler.generateBundlerEnv(host)]).toBe(
       `${username}:${password}`
     );
+    expect(process.env[bundler.BUNDLE_GEM__PUSH_KEY]).toBe(key);
+    expect(process.env[bundler.RUBYGEMS_HOST]).toBe(authenticatedHost);
   });
 
   describe('gem', () => {

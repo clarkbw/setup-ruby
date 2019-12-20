@@ -1,7 +1,7 @@
 import {promises as fs} from 'fs';
+import * as core from '@actions/core';
 import * as os from 'os';
 import * as path from 'path';
-import * as core from '@actions/core';
 
 export const GEM_DIR = '.gem';
 export const CREDENTIALS_FILE = 'credentials';
