@@ -883,13 +883,15 @@ const path_1 = __webpack_require__(622);
 const io_1 = __webpack_require__(1);
 const core_1 = __webpack_require__(470);
 const gem_1 = __webpack_require__(910);
-(function () {
+function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const directory = path_1.join(os.homedir(), gem_1.GEM_DIR);
         yield io_1.rmRF(directory);
         core_1.debug(`cleanup: removing directory ${directory}`);
     });
-})();
+}
+exports.run = run;
+run();
 
 
 /***/ }),

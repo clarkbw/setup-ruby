@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 
-// This authentication does not work for publishing to GitHub Packages at the moment. 
+// This authentication does not work for publishing to GitHub Packages at the moment.
 // Bundler strips the path from the host URL, attempting to publish to rubygems.pkg.github.com
 // Therefore this command does not work: bundle exec rake release:rubygem_push
 // However the settings provided here allow bundler to install packages from authenticated sources

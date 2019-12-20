@@ -96,9 +96,9 @@ describe('auth', () => {
     it(`deletes the auth directory `, async () => {
       const key = 'github';
       const password = 'SingleOrigin';
-  
+
       await auth.configAuthentication({key, password});
-  
+
       expect(fs.existsSync(GEM_DIR)).toBe(true);
       expect(fs.existsSync(CREDENTIALS_FILE)).toBe(true);
 
