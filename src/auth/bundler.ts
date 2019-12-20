@@ -24,6 +24,7 @@ export function authenticatedHost(
   const url = new URL(host);
   url.username = username;
   url.password = password;
+  console.log(`url: ${url.href}`);
   return url.href;
 }
 
@@ -46,6 +47,6 @@ export default async function(
   console.log(`export ${BUNDLE_GEM__PUSH_KEY}=${key}`);
 
   const rubyGemsHost = authenticatedHost(username, password, host);
-  core.exportVariable(RUBYGEMS_HOST, rubyGemsHost);
-  console.log(`export ${RUBYGEMS_HOST}=${rubyGemsHost}`);
+  core.exportVariable(RUBYGEMS_HOST, host);
+  console.log(`export ${RUBYGEMS_HOST}=${host}`);
 }

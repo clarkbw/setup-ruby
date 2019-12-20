@@ -923,12 +923,15 @@ const os = __importStar(__webpack_require__(87));
 const path = __importStar(__webpack_require__(622));
 exports.GEM_DIR = '.gem';
 exports.CREDENTIALS_FILE = 'credentials';
+exports.GEM_HOST_API_KEY = 'GEM_HOST_API_KEY';
 function default_1(key, password) {
     return __awaiter(this, void 0, void 0, function* () {
         const directory = path.join(os.homedir(), exports.GEM_DIR);
         yield fs_1.promises.mkdir(directory, { recursive: true });
         core.debug(`created directory ${directory}`);
         yield write(directory, generate(key, password));
+        core.exportVariable(exports.GEM_HOST_API_KEY, password);
+        console.log(`export ${exports.GEM_HOST_API_KEY}=${password}`);
     });
 }
 exports.default = default_1;
