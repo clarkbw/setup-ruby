@@ -921,8 +921,8 @@ const fs_1 = __webpack_require__(747);
 const core = __importStar(__webpack_require__(470));
 const os = __importStar(__webpack_require__(87));
 const path = __importStar(__webpack_require__(622));
-exports.GEM_DIR = '.gem';
-exports.CREDENTIALS_FILE = 'credentials';
+exports.GEM_DIR = '.';
+exports.CREDENTIALS_FILE = '.gemrc';
 exports.GEM_HOST_API_KEY = 'GEM_HOST_API_KEY';
 function default_1(key, password) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -935,9 +935,12 @@ function default_1(key, password) {
     });
 }
 exports.default = default_1;
-// only exported for testing purposes
+// // only exported for testing purposes
+// export function generate(key: string, password: string) {
+//   return `---\n:${key}: Bearer ${password}\n`;
+// }
 function generate(key, password) {
-    return `---\n:${key}: Bearer ${password}\n`;
+    return `---\ndisable_default_gem_server: true\n`;
 }
 exports.generate = generate;
 function write(directory, credentials) {

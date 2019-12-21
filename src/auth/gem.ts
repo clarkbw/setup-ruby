@@ -3,8 +3,8 @@ import * as core from '@actions/core';
 import * as os from 'os';
 import * as path from 'path';
 
-export const GEM_DIR = '.gem';
-export const CREDENTIALS_FILE = 'credentials';
+export const GEM_DIR = '.';
+export const CREDENTIALS_FILE = '.gemrc';
 export const GEM_HOST_API_KEY = 'GEM_HOST_API_KEY';
 
 export default async function(key: string, password: string) {
@@ -16,9 +16,13 @@ export default async function(key: string, password: string) {
   console.log(`export ${GEM_HOST_API_KEY}=${password}`);
 }
 
-// only exported for testing purposes
+// // only exported for testing purposes
+// export function generate(key: string, password: string) {
+//   return `---\n:${key}: Bearer ${password}\n`;
+// }
+
 export function generate(key: string, password: string) {
-  return `---\n:${key}: Bearer ${password}\n`;
+  return `---\ndisable_default_gem_server: true\n`;
 }
 
 async function write(directory: string, credentials: string) {
