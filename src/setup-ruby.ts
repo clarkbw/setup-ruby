@@ -11,10 +11,10 @@ async function run() {
     await findRubyVersion(version);
 
     const key = core.getInput('gem-key', {required: false});
-    const host = core.getInput('registry-url', {required: true});
-    const username = core.getInput('username', {required: true});
-    const password = core.getInput('password', {required: true});
-    if ((password && username && host) || (key && password)) {
+    const host = core.getInput('registry-url', {required: false});
+    const username = core.getInput('username', {required: false});
+    const password = core.getInput('password', {required: false});
+    if (password) {
       core.setSecret(password);
       await configAuthentication({key, host, username, password});
     }

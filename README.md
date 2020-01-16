@@ -54,7 +54,7 @@ steps:
   run: gem build *.gemspec
 - name: Publish to GitHub Packages
   run: |
-    gem push --KEY github --host https://rubygems.pkg.github.com/<username/org> *.gem
+    gem push --KEY github --host https://rubygems.pkg.github.com/<username or org> *.gem
 ```
 
 ## Run tests with bundler
@@ -63,8 +63,8 @@ steps:
 - uses: actions/checkout@master
 - uses: actions/setup-ruby@v1
   with:
-    gem-key: github
-    registry-url: https://rubygems.pkg.github.com/<username/org>
+    gem-key: github # or rubygems_api_key for rubygems
+    registry-url: https://rubygems.pkg.github.com/<username or org>
     username: $${{ github.actor }}
     password: ${{ github.token }} 
 # Using cache to speed up install https://github.com/actions/cache/blob/master/examples.md#ruby---gem

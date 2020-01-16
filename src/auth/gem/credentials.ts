@@ -3,27 +3,23 @@ import * as core from '@actions/core';
 import * as os from 'os';
 import * as path from 'path';
 
-export const GEM_DIR = '.';
-export const CREDENTIALS_FILE = '.gemrc';
-export const GEM_HOST_API_KEY = 'GEM_HOST_API_KEY';
+import {CREDENTIALS_DIR, CREDENTIALS_FILE} from '.';
 
 export default async function(key: string, password: string) {
-  const directory: string = path.join(os.homedir(), GEM_DIR);
+  const directory: string = path.join(os.homedir(), CREDENTIALS_DIR);
   await fs.mkdir(directory, {recursive: true});
-  core.debug(`created directory ${directory}`);
+  console.log(`created directory ${directory}`);
   await write(directory, generate(key, password));
-  core.exportVariable(GEM_HOST_API_KEY, password);
-  console.log(`export ${GEM_HOST_API_KEY}=${password}`);
 }
 
-// // only exported for testing purposes
-// export function generate(key: string, password: string) {
-//   return `---\n:${key}: Bearer ${password}\n`;
-// }
-
+// only exported for testing purposes
 export function generate(key: string, password: string) {
-  return `---\ndisable_default_gem_server: true\n`;
+  return `---\n:${key}: Bearer ${password}\n`;
 }
+
+// export function generate(key: string, password: string) {
+//   return `---\ndisable_default_gem_server: true\n`;
+// }
 
 async function write(directory: string, credentials: string) {
   const options = {encoding: 'utf-8', mode: 0o600};

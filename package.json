@@ -5,9 +5,9 @@
   "description": "setup ruby action",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build && ncc build src/cleanup.ts -o dist/cleanup",
-    "format": "prettier --write **/*.ts */**/*.ts",
-    "format-check": "prettier --check **/*.ts */**/*.ts",
+    "build": "ncc build src/setup-ruby.ts -o dist && ncc build src/cleanup.ts -o dist/cleanup",
+    "format": "prettier --write '**/*.ts'",
+    "format-check": "prettier --check '**/*.ts'",
     "test": "jest"
   },
   "repository": {
@@ -22,7 +22,7 @@
   "author": "GitHub",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.0",
+    "@actions/core": "^1.2.1",
     "@actions/tool-cache": "^1.0.0",
     "semver": "^6.1.1"
   },

@@ -339,6 +339,60 @@ function copyFile(srcFile, destFile, force) {
 
 /***/ }),
 
+/***/ 41:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __webpack_require__(747);
+const os = __importStar(__webpack_require__(87));
+const path = __importStar(__webpack_require__(622));
+const _1 = __webpack_require__(991);
+function default_1(key, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const directory = path.join(os.homedir(), _1.CREDENTIALS_DIR);
+        yield fs_1.promises.mkdir(directory, { recursive: true });
+        console.log(`created directory ${directory}`);
+        yield write(directory, generate(key, password));
+    });
+}
+exports.default = default_1;
+// only exported for testing purposes
+function generate(key, password) {
+    return `---\n:${key}: Bearer ${password}\n`;
+}
+exports.generate = generate;
+// export function generate(key: string, password: string) {
+//   return `---\ndisable_default_gem_server: true\n`;
+// }
+function write(directory, credentials) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const options = { encoding: 'utf-8', mode: 0o600 };
+        const location = path.join(directory, _1.CREDENTIALS_FILE);
+        console.log(`writing ${location}`);
+        yield fs_1.promises.writeFile(location, credentials, options);
+    });
+}
+
+
+/***/ }),
+
 /***/ 87:
 /***/ (function(module) {
 
@@ -353,10 +407,129 @@ module.exports = require("child_process");
 
 /***/ }),
 
+/***/ 216:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
+const _1 = __webpack_require__(428);
+// This authentication does not work for publishing to GitHub Packages at the moment.
+// Bundler strips the path from the host URL, attempting to publish to rubygems.pkg.github.com
+// Therefore this command does not work: bundle exec rake release:rubygem_push
+// However the settings provided here allow bundler to install packages from authenticated sources
+exports.RUBYGEMS_HOST = 'RUBYGEMS_HOST';
+exports.BUNDLE_GEM__PUSH_KEY = 'BUNDLE_GEM__PUSH_KEY';
+// only exported for tests
+function generateBundlerEnv(host) {
+    const url = new URL(host);
+    const domain = url.hostname.toUpperCase();
+    return `BUNDLE_${domain.replace(/\./g, '__')}`;
+}
+exports.generateBundlerEnv = generateBundlerEnv;
+function default_1(key, host, username, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // https://bundler.io/v1.16/bundle_config.html
+        // env['BUNDLE_RUBYGEMS__PKG__GITHUB__COM'] = USERNAME:PASSWORD
+        const env = generateBundlerEnv(host);
+        core.exportVariable(env, `${username}:${password}`);
+        console.log(`export ${env}=${username}:${password}`);
+        // https://bundler.io/v1.16/bundle_config.html
+        // sets the push key to use from ~/.gem/credentials
+        core.exportVariable(exports.BUNDLE_GEM__PUSH_KEY, key);
+        console.log(`export ${exports.BUNDLE_GEM__PUSH_KEY}=${key}`);
+        // equivalent to the --host option when pushing
+        const rubyGemsHost = _1.authenticatedHost(username, password, host);
+        core.exportVariable(exports.RUBYGEMS_HOST, rubyGemsHost);
+        console.log(`export ${exports.RUBYGEMS_HOST}=${rubyGemsHost}`);
+    });
+}
+exports.default = default_1;
+
+
+/***/ }),
+
 /***/ 357:
 /***/ (function(module) {
 
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 428:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
+const bundler_1 = __importDefault(__webpack_require__(216));
+const gem_1 = __importDefault(__webpack_require__(991));
+exports.GEM_HOST_API_KEY = 'GEM_HOST_API_KEY';
+// This supports 2 authentication methods for bundler and gem as they are the
+// most common tools used for Ruby Gems
+function configAuthentication(config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (config.password) {
+            // sets the password for push, this overrides the --key command line option
+            core.exportVariable(exports.GEM_HOST_API_KEY, `${config.password}`);
+            console.log(`export ${exports.GEM_HOST_API_KEY}=${config.password}`);
+        }
+        if (config.key && config.host && config.username && config.password) {
+            console.log(`configuring bundler for ${config.host} = ${config.username}:${config.password}`);
+            yield bundler_1.default(config.key, config.host, config.username, config.password);
+            console.log(`configuring gem with key: ${config.key}`);
+            yield gem_1.default(config.key, config.host, config.username, config.password);
+        }
+        else {
+            console.log(`all parameters are required: key, host, username, password`);
+        }
+    });
+}
+exports.configAuthentication = configAuthentication;
+function authenticatedHost(username, password, host) {
+    const url = new URL(host);
+    url.username = username;
+    url.password = password;
+    console.log(`authenticated URL: ${url.href}`);
+    return url.href;
+}
+exports.authenticatedHost = authenticatedHost;
+
 
 /***/ }),
 
@@ -400,13 +573,20 @@ class Command {
         let cmdStr = CMD_STRING + this.command;
         if (this.properties && Object.keys(this.properties).length > 0) {
             cmdStr += ' ';
+            let first = true;
             for (const key in this.properties) {
                 if (this.properties.hasOwnProperty(key)) {
                     const val = this.properties[key];
                     if (val) {
+                        if (first) {
+                            first = false;
+                        }
+                        else {
+                            cmdStr += ',';
+                        }
                         // safely append the val - avoid blowing up when attempting to
                         // call .replace() if message is not a string for some reason
-                        cmdStr += `${key}=${escape(`${val || ''}`)},`;
+                        cmdStr += `${key}=${escape(`${val || ''}`)}`;
                     }
                 }
             }
@@ -632,6 +812,66 @@ function getState(name) {
 }
 exports.getState = getState;
 //# sourceMappingURL=core.js.map
+
+/***/ }),
+
+/***/ 618:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __webpack_require__(747);
+const os = __importStar(__webpack_require__(87));
+const path = __importStar(__webpack_require__(622));
+const __1 = __webpack_require__(428);
+const _1 = __webpack_require__(991);
+function default_1(host, username, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const directory = path.join(os.homedir(), _1.GEMRC_DIR);
+        yield fs_1.promises.mkdir(directory, { recursive: true });
+        console.log(`created directory ${directory}`);
+        yield write(directory, generate(host, username, password));
+    });
+}
+exports.default = default_1;
+// only exported for testing purposes
+function generate(host, username, password) {
+    return `---
+:backtrace: false
+:bulk_threshold: 1000
+:sources:
+- https://rubygems.org/
+- ${__1.authenticatedHost(username, password, host)}
+:update_sources: true
+:verbose: true
+`;
+}
+exports.generate = generate;
+function write(directory, credentials) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const options = { encoding: 'utf-8' };
+        const location = path.join(directory, _1.GEMRC_FILE);
+        console.log(`writing ${location}`);
+        yield fs_1.promises.writeFile(location, credentials, options);
+    });
+}
+
 
 /***/ }),
 
@@ -881,13 +1121,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os = __importStar(__webpack_require__(87));
 const path_1 = __webpack_require__(622);
 const io_1 = __webpack_require__(1);
-const core_1 = __webpack_require__(470);
-const gem_1 = __webpack_require__(910);
+const gem_1 = __webpack_require__(991);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const directory = path_1.join(os.homedir(), gem_1.GEM_DIR);
+        const directory = path_1.join(os.homedir(), gem_1.CREDENTIALS_DIR);
         yield io_1.rmRF(directory);
-        core_1.debug(`cleanup: removing directory ${directory}`);
+        console.log(`cleanup: removing directory ${directory}`);
+        const file = path_1.join(os.homedir(), gem_1.GEMRC_FILE);
+        yield io_1.rmRF(file);
+        console.log(`cleanup: removing file ${file}`);
     });
 }
 exports.run = run;
@@ -896,7 +1138,7 @@ run();
 
 /***/ }),
 
-/***/ 910:
+/***/ 991:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 "use strict";
@@ -909,48 +1151,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = __webpack_require__(747);
-const core = __importStar(__webpack_require__(470));
-const os = __importStar(__webpack_require__(87));
-const path = __importStar(__webpack_require__(622));
-exports.GEM_DIR = '.';
-exports.CREDENTIALS_FILE = '.gemrc';
-exports.GEM_HOST_API_KEY = 'GEM_HOST_API_KEY';
-function default_1(key, password) {
+const gemrc_1 = __importDefault(__webpack_require__(618));
+const credentials_1 = __importDefault(__webpack_require__(41));
+exports.GEMRC_DIR = '.';
+exports.GEMRC_FILE = '.gemrc';
+exports.CREDENTIALS_DIR = '.gem/';
+exports.CREDENTIALS_FILE = 'credentials';
+function default_1(key, host, username, password) {
     return __awaiter(this, void 0, void 0, function* () {
-        const directory = path.join(os.homedir(), exports.GEM_DIR);
-        yield fs_1.promises.mkdir(directory, { recursive: true });
-        core.debug(`created directory ${directory}`);
-        yield write(directory, generate(key, password));
-        core.exportVariable(exports.GEM_HOST_API_KEY, password);
-        console.log(`export ${exports.GEM_HOST_API_KEY}=${password}`);
+        yield gemrc_1.default(host, username, password);
+        yield credentials_1.default(key, password);
     });
 }
 exports.default = default_1;
-// // only exported for testing purposes
-// export function generate(key: string, password: string) {
-//   return `---\n:${key}: Bearer ${password}\n`;
-// }
-function generate(key, password) {
-    return `---\ndisable_default_gem_server: true\n`;
-}
-exports.generate = generate;
-function write(directory, credentials) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const options = { encoding: 'utf-8', mode: 0o600 };
-        const location = path.join(directory, exports.CREDENTIALS_FILE);
-        console.log(`writing ${location}`);
-        yield fs_1.promises.writeFile(location, credentials, options);
-    });
-}
 
 
 /***/ })
