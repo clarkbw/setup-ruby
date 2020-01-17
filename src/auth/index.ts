@@ -17,8 +17,10 @@ interface GemBundlerParameters {
 export async function configAuthentication(config: GemBundlerParameters) {
   if (config.password) {
     // sets the password for push, this overrides the --key command line option
-    core.exportVariable(GEM_HOST_API_KEY, `${config.password}`);
-    console.log(`export ${GEM_HOST_API_KEY}=${config.password}`);
+    // confusing that https://github.com/rubygems/rubygems/blob/master/lib/rubygems/commands/push_command.rb#L132
+    // would indicate this needs to use the same `Bearer: ${password}` syntax
+    core.exportVariable(GEM_HOST_API_KEY, `Bearer ${config.password}`);
+    console.log(`export ${GEM_HOST_API_KEY}='Bearer ${config.password}'`);
   }
 
   if (config.key && config.host && config.username && config.password) {
