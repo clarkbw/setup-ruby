@@ -41,6 +41,18 @@ jobs:
           architecture: 'x64'
       - run: ruby hello.rb
 ```
+## Need a different version of gem?
+```yaml
+steps:
+- uses: actions/checkout@master
+- uses: actions/setup-ruby@v1
+- name: Set Ruby Gem Version
+  run: gem update --system 3.0.5
+- name: Update to latest Ruby Gem version
+  run: gem update --system
+```
+
+See the [rubygems upgrading](https://github.com/rubygems/rubygems/blob/master/UPGRADING.md) doc for more information.
 
 ## Publish with gem
 ```yaml
